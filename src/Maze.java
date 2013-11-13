@@ -117,6 +117,7 @@ public class Maze implements VisibleObject {
 			}
 		}
 		paintSingleFloorTile(gl, MAZE_SIZE * SQUARE_SIZE); // Paint the floor.
+		paintSingleCeilingTile(gl, MAZE_SIZE * SQUARE_SIZE); // Paint the ceiling.
 	}
 
 	/**
@@ -128,15 +129,22 @@ public class Maze implements VisibleObject {
 	 * @param size
 	 *            the size of the tile
 	 */
+	
+	private void paintSingleCeilingTile(GL gl, double size) {
+		float wallColour[] = { 0.0f, 0.0f, 1.0f, 1.0f };
+		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);
+		gl.glNormal3d(0, 1, 0);
+		gl.glBegin(GL.GL_QUADS);
+		gl.glVertex3d(0, 5, 0);
+		gl.glVertex3d(size, 5, 0);
+		gl.glVertex3d(size, 5, size);
+		gl.glVertex3d(0, 5, size);
+		gl.glEnd();
+	}
+	
 	private void paintSingleFloorTile(GL gl, double size) {
-		// Setting the floor color and material.
-		float wallColour[] = { 0.0f, 0.0f, 1.0f, 1.0f }; // The floor is blue.
-		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0); // Set the
-																	// materials
-																	// used by
-																	// the
-																	// floor.
-
+		float wallColour[] = { 0.0f, 0.0f, 1.0f, 1.0f };
+		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);
 		gl.glNormal3d(0, 1, 0);
 		gl.glBegin(GL.GL_QUADS);
 		gl.glVertex3d(0, 0, 0);
