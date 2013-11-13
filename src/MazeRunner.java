@@ -44,7 +44,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 														// will be displayed on
 														// screen.
 	private Player player; // The player object.
-	private Guard guard;	//The guard object
+	private Guard guard; // The guard object
 	private Camera camera; // The camera object.
 	private UserInput input; // The user input object that controls the player.
 	private Maze maze; // The maze.
@@ -174,9 +174,9 @@ public class MazeRunner extends Frame implements GLEventListener {
 		visibleObjects = new ArrayList<VisibleObject>();
 		// Add the maze that we will be using.
 		maze = new Maze();
-		guard = new  Guard(maze.SQUARE_SIZE + maze.SQUARE_SIZE / 2, // x-position
-				maze.SQUARE_SIZE / 2, // y-position
-				maze.SQUARE_SIZE + maze.SQUARE_SIZE / 2); // z-position
+		guard = new Guard(Maze.SQUARE_SIZE + Maze.SQUARE_SIZE / 2, // x-position
+				Maze.SQUARE_SIZE / 2, // y-position
+				Maze.SQUARE_SIZE + Maze.SQUARE_SIZE / 2); // z-position
 		visibleObjects.add(maze);
 		visibleObjects.add(guard);
 
@@ -192,15 +192,12 @@ public class MazeRunner extends Frame implements GLEventListener {
 
 		input = new UserInput(canvas);
 		player.setControl(input);
-		
-		
-		
-		//Initialize the guard
-		guard = new Guard(maze.SQUARE_SIZE + maze.SQUARE_SIZE / 2, // x-position
-				maze.SQUARE_SIZE / 2, // y-position
-				maze.SQUARE_SIZE + maze.SQUARE_SIZE / 2); // z-position
-		
-		
+
+		// Initialize the guard
+		guard = new Guard(Maze.SQUARE_SIZE + Maze.SQUARE_SIZE / 2, // x-position
+				Maze.SQUARE_SIZE / 2, // y-position
+				Maze.SQUARE_SIZE + Maze.SQUARE_SIZE / 2); // z-position
+
 	}
 
 	/*
@@ -295,7 +292,8 @@ public class MazeRunner extends Frame implements GLEventListener {
 				camera.getVuvZ());
 
 		// Display all the visible objects of MazeRunner.
-		for (Iterator<VisibleObject> it = visibleObjects.iterator(); it.hasNext();) {
+		for (Iterator<VisibleObject> it = visibleObjects.iterator(); it
+				.hasNext();) {
 			it.next().display(gl);
 		}
 
