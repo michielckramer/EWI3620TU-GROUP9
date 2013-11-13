@@ -10,8 +10,7 @@
  * done with caution.
  * 
  * @author Bruno Scheele
- * 
- * 
+ *  
  */
 public class Camera extends GameObject {
 	private double horAngle, verAngle;

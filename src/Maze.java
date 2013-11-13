@@ -52,13 +52,6 @@ public class Maze implements VisibleObject {
 			return false;
 	}
 
-	public boolean isFinish(int x, int z) {
-		if (x >= 0 && x < MAZE_SIZE && z >= 0 && z < MAZE_SIZE)
-			return maze[x][z] == 2;
-		else
-			return false;
-	}
-
 	/**
 	 * isWall(double x, double z) checks for a wall by converting the double
 	 * values to integer coordinates.
@@ -77,12 +70,6 @@ public class Maze implements VisibleObject {
 		int gX = convertToGridX(x);
 		int gZ = convertToGridZ(z);
 		return isWall(gX, gZ);
-	}
-
-	public boolean isFinish(double x, double z) {
-		int gX = convertToGridX(x);
-		int gZ = convertToGridZ(z);
-		return isFinish(gX, gZ);
 	}
 
 	/**

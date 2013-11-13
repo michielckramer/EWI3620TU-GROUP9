@@ -330,30 +330,6 @@ public class MazeRunner extends Frame implements GLEventListener {
 						player.getLocationZ() + 0.2)) {
 			player.setLocationX(lx);
 			player.setLocationZ(lz);
-			File bounceFile = new File("boing.wav");
-			java.net.URL bounceURL;
-			try {
-				bounceURL = bounceFile.toURI().toURL();
-				AudioClip bounceClip = Applet.newAudioClip(bounceURL);
-				bounceClip.play();
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		if (maze.isFinish(player.getLocationX(), player.getLocationY())
-				&& applause) {
-			applause = false;
-			File applauseFile = new File("applause.wav");
-			java.net.URL applauseURL;
-			try {
-				applauseURL = applauseFile.toURI().toURL();
-				AudioClip applauseClip = Applet.newAudioClip(applauseURL);
-				applauseClip.play();
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
 
