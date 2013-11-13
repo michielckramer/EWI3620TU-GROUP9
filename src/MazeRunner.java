@@ -35,6 +35,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 	 */
 
 	private static boolean collision = true;
+	private static boolean pause = false;
 
 	private GLCanvas canvas;
 
@@ -73,6 +74,14 @@ public class MazeRunner extends Frame implements GLEventListener {
 
 	public static void setCollision(boolean coll) {
 		collision = coll;
+	}
+
+	public static boolean getPause() {
+		return pause;
+	}
+
+	public static void setPause(boolean p) {
+		pause = p;
 	}
 
 	public MazeRunner() {
@@ -258,8 +267,10 @@ public class MazeRunner extends Frame implements GLEventListener {
 		previousTime = currentTime;
 
 		// Update any movement since last frame.
-		updateMovement(deltaTime, collision);
-		updateCamera();
+		if (!pause) {
+			updateMovement(deltaTime, collision);
+			updateCamera();
+		}
 
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();

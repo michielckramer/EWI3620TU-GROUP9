@@ -110,7 +110,11 @@ public class UserInput extends Control implements MouseListener,
 			}
 			break;
 		case KeyEvent.VK_ESCAPE:
-			// PauseOverlayasdf
+			if (MazeRunner.getPause()) {
+				MazeRunner.setPause(false);
+			} else {
+				MazeRunner.setPause(true);
+			}
 			break;
 		}
 	}
