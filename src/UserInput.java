@@ -92,6 +92,23 @@ public class UserInput extends Control implements MouseListener,
 		case KeyEvent.VK_D:
 			right = true;
 			break;
+		case KeyEvent.VK_SPACE:
+			if (!MazeRunner.getCollision()) {
+				up = true;
+			}
+			break;
+		case KeyEvent.VK_SHIFT:
+			if (!MazeRunner.getCollision()) {
+				down = true;
+			}
+			break;
+		case KeyEvent.VK_F1:
+			if (MazeRunner.getCollision()) {
+				MazeRunner.setCollision(false);
+			} else {
+				MazeRunner.setCollision(true);
+			}
+			break;
 		}
 	}
 
@@ -109,6 +126,12 @@ public class UserInput extends Control implements MouseListener,
 			break;
 		case KeyEvent.VK_D:
 			right = false;
+			break;
+		case KeyEvent.VK_SPACE:
+			up = false;
+			break;
+		case KeyEvent.VK_SHIFT:
+			down = false;
 			break;
 		}
 	}

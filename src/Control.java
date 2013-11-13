@@ -21,6 +21,8 @@ public abstract class Control {
 	protected boolean back = false;
 	protected boolean left = false;
 	protected boolean right = false;
+	protected boolean up = false;
+	protected boolean down = false;
 
 	protected int dX = 0;
 	protected int dY = 0;
@@ -52,7 +54,14 @@ public abstract class Control {
 	public boolean getRight() {
 		return right;
 	}
+	
+	public boolean getUp() {
+		return up;
+	}
 
+	public boolean getDown() {
+		return down;
+	}
 	/**
 	 * Gets the amount of rotation desired on the horizontal plane.
 	 * 

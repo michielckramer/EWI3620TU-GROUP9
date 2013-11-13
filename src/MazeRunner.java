@@ -38,6 +38,9 @@ public class MazeRunner extends Frame implements GLEventListener {
 	 * **********************************************
 	 * * Local variables * **********************************************
 	 */
+
+	private static boolean collision = true;
+
 	private GLCanvas canvas;
 
 	private int screenWidth = 600, screenHeight = 600; // Screen size.
@@ -68,6 +71,15 @@ public class MazeRunner extends Frame implements GLEventListener {
 	 * as the OpenGL event listener, to be able to function as the view
 	 * controller.
 	 */
+
+	public static boolean getCollision() {
+		return collision;
+	}
+
+	public static void setCollision(boolean coll) {
+		collision = coll;
+	}
+
 	public MazeRunner() {
 		// Make a new window.
 		super("MazeRunner");
@@ -247,7 +259,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 		previousTime = currentTime;
 
 		// Update any movement since last frame.
-		updateMovement(deltaTime);
+		updateMovement(deltaTime, collision);
 		updateCamera();
 
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
@@ -315,10 +327,9 @@ public class MazeRunner extends Frame implements GLEventListener {
 	 * updateMovement(int) updates the position of all objects that need moving.
 	 * This includes rudimentary collision checking and collision reaction.
 	 */
-	private void updateMovement(int deltaTime) {
+	private void updateMovement(int deltaTime, boolean collision) {
 		double lx = player.getLocationX();
 		double lz = player.getLocationZ();
-		boolean applause = true;
 		player.update(deltaTime);
 		if (maze.isWall(player.getLocationX() - 0.2,
 				player.getLocationZ() - 0.2)
@@ -328,8 +339,11 @@ public class MazeRunner extends Frame implements GLEventListener {
 						player.getLocationZ() + 0.2)
 				|| maze.isWall(player.getLocationX() + 0.2,
 						player.getLocationZ() + 0.2)) {
-			player.setLocationX(lx);
-			player.setLocationZ(lz);
+			if (collision && player.getLocationY() >= 0
+					&& player.getLocationY() <= maze.SQUARE_SIZE) {
+				player.setLocationX(lx);
+				player.setLocationZ(lz);
+			}
 		}
 	}
 

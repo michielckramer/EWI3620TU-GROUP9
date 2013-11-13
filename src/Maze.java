@@ -25,7 +25,7 @@ import com.sun.opengl.util.GLUT;
 public class Maze implements VisibleObject {
 
 	public final double MAZE_SIZE = 10;
-	public final double SQUARE_SIZE = 5;
+	public static final double SQUARE_SIZE = 5;
 
 	private int[][] maze = { { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 			{ 1, 0, 1, 0, 0, 0, 0, 0, 0, 1 }, { 1, 0, 0, 0, 1, 0, 1, 1, 0, 1 },
@@ -117,7 +117,8 @@ public class Maze implements VisibleObject {
 			}
 		}
 		paintSingleFloorTile(gl, MAZE_SIZE * SQUARE_SIZE); // Paint the floor.
-		paintSingleCeilingTile(gl, MAZE_SIZE * SQUARE_SIZE); // Paint the ceiling.
+		paintSingleCeilingTile(gl, MAZE_SIZE * SQUARE_SIZE); // Paint the
+																// ceiling.
 	}
 
 	/**
@@ -129,7 +130,7 @@ public class Maze implements VisibleObject {
 	 * @param size
 	 *            the size of the tile
 	 */
-	
+
 	private void paintSingleCeilingTile(GL gl, double size) {
 		float wallColour[] = { 0.0f, 0.0f, 1.0f, 1.0f };
 		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);
@@ -141,7 +142,7 @@ public class Maze implements VisibleObject {
 		gl.glVertex3d(0, 5, size);
 		gl.glEnd();
 	}
-	
+
 	private void paintSingleFloorTile(GL gl, double size) {
 		float wallColour[] = { 0.0f, 0.0f, 1.0f, 1.0f };
 		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);

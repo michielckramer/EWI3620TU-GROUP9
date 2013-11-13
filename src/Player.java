@@ -169,6 +169,12 @@ public class Player extends GameObject {
 						- Math.cos(Math.toRadians(getHorAngle() - 90))
 						* deltaTime * speed);
 			}
+			if (control.getUp()) {
+				this.setLocationY(locationY + deltaTime * speed);
+			}
+			if (control.getDown()) {
+				this.setLocationY(locationY - deltaTime * speed);
+			}
 		}
 	}
 }
