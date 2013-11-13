@@ -109,6 +109,9 @@ public class UserInput extends Control implements MouseListener,
 				MazeRunner.setCollision(true);
 			}
 			break;
+		case KeyEvent.VK_ESCAPE:
+			// PauseOverlay
+			break;
 		}
 	}
 

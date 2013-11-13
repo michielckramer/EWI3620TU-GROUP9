@@ -1,16 +1,11 @@
-import java.applet.Applet;
-import java.applet.AudioClip;
 import java.awt.*;
 import java.awt.event.*;
 
 import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
-import javax.print.DocFlavor.URL;
 
 import com.sun.opengl.util.*;
 
-import java.io.File;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -43,7 +38,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 
 	private GLCanvas canvas;
 
-	private int screenWidth = 600, screenHeight = 600; // Screen size.
+	private int screenWidth, screenHeight; // Screen size.
 	private ArrayList<VisibleObject> visibleObjects; // A list of objects that
 														// will be displayed on
 														// screen.
@@ -83,6 +78,10 @@ public class MazeRunner extends Frame implements GLEventListener {
 	public MazeRunner() {
 		// Make a new window.
 		super("MazeRunner");
+
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		screenWidth = (int) screenSize.getWidth();
+		screenHeight = (int) screenSize.getHeight();
 
 		// Let's change the window to our liking.
 		setSize(screenWidth, screenHeight);
@@ -167,9 +166,9 @@ public class MazeRunner extends Frame implements GLEventListener {
 		visibleObjects.add(maze);
 
 		// Initialize the player.
-		player = new Player(maze.SQUARE_SIZE + maze.SQUARE_SIZE / 2, // x-position
-				maze.SQUARE_SIZE / 2, // y-position
-				maze.SQUARE_SIZE + maze.SQUARE_SIZE / 2, // z-position
+		player = new Player(Maze.SQUARE_SIZE + Maze.SQUARE_SIZE / 2, // x-position
+				Maze.SQUARE_SIZE / 2, // y-position
+				Maze.SQUARE_SIZE + Maze.SQUARE_SIZE / 2, // z-position
 				90, 0); // horizontal and vertical angle
 
 		camera = new Camera(player.getLocationX(), player.getLocationY(),
@@ -340,7 +339,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 				|| maze.isWall(player.getLocationX() + 0.2,
 						player.getLocationZ() + 0.2)) {
 			if (collision && player.getLocationY() >= 0
-					&& player.getLocationY() <= maze.SQUARE_SIZE) {
+					&& player.getLocationY() <= Maze.SQUARE_SIZE) {
 				player.setLocationX(lx);
 				player.setLocationZ(lz);
 			}
@@ -371,8 +370,4 @@ public class MazeRunner extends Frame implements GLEventListener {
 	 * 
 	 * @param args
 	 */
-	public static void main(String[] args) {
-		// Create and run MazeRunner.
-		new MazeRunner();
-	}
 }
