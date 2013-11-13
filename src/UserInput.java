@@ -103,18 +103,10 @@ public class UserInput extends Control implements MouseListener,
 			}
 			break;
 		case KeyEvent.VK_F1:
-			if (MazeRunner.getCollision()) {
-				MazeRunner.setCollision(false);
-			} else {
-				MazeRunner.setCollision(true);
-			}
+			MazeRunner.setCollision(!MazeRunner.getCollision());
 			break;
 		case KeyEvent.VK_ESCAPE:
-			if (MazeRunner.getPause()) {
-				MazeRunner.setPause(false);
-			} else {
-				MazeRunner.setPause(true);
-			}
+			MazeRunner.setPause(!MazeRunner.getPause());
 			break;
 		}
 	}

@@ -385,14 +385,4 @@ public class MazeRunner extends Frame implements GLEventListener {
 		camera.setVerAngle(player.getVerAngle());
 		camera.calculateVRP();
 	}
-
-	/*
-	 * **********************************************
-	 * * Main * **********************************************
-	 */
-	/**
-	 * Program entry point
-	 * 
-	 * @param args
-	 */
 }

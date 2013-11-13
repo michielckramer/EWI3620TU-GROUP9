@@ -50,6 +50,5 @@ public class StartMenu implements ActionListener {
 		if (src == exitButton) {
 			frame.dispose();
 		}
-
 	}
 }
