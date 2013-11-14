@@ -34,6 +34,8 @@ public class MazeRunner extends Frame implements GLEventListener {
 	 * * Local variables * **********************************************
 	 */
 
+	private int state = 1;
+
 	private static boolean collision = true;
 	private static boolean pause = false;
 
@@ -68,6 +70,14 @@ public class MazeRunner extends Frame implements GLEventListener {
 	 * as the OpenGL event listener, to be able to function as the view
 	 * controller.
 	 */
+
+	public int getState() {
+		return state;
+	}
+
+	public void setState(int state) {
+		this.state = state;
+	}
 
 	public static boolean getCollision() {
 		return collision;
@@ -174,6 +184,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 		visibleObjects = new ArrayList<VisibleObject>();
 		// Add the maze that we will be using.
 		maze = new Maze();
+
 		guard = new Guard(Maze.SQUARE_SIZE + Maze.SQUARE_SIZE / 2, // x-position
 				Maze.SQUARE_SIZE / 2, // y-position
 				Maze.SQUARE_SIZE + Maze.SQUARE_SIZE / 2); // z-position
@@ -192,12 +203,6 @@ public class MazeRunner extends Frame implements GLEventListener {
 
 		input = new UserInput(canvas);
 		player.setControl(input);
-
-		// Initialize the guard
-		guard = new Guard(Maze.SQUARE_SIZE + Maze.SQUARE_SIZE / 2, // x-position
-				Maze.SQUARE_SIZE / 2, // y-position
-				Maze.SQUARE_SIZE + Maze.SQUARE_SIZE / 2); // z-position
-
 	}
 
 	/*
