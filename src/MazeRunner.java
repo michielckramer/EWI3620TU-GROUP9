@@ -34,10 +34,13 @@ public class MazeRunner extends Frame implements GLEventListener {
 	 * * Local variables * **********************************************
 	 */
 
-	private int state = 1;
+	/*
+	 * States: 1 = Startmenu, 2 = Running, 3 = Pause
+	 */
+
+	private static int gamestate = 2;
 
 	private static boolean collision = true;
-	private static boolean pause = false;
 
 	private GLCanvas canvas;
 
@@ -71,12 +74,20 @@ public class MazeRunner extends Frame implements GLEventListener {
 	 * controller.
 	 */
 
-	public int getState() {
-		return state;
+	public static int getGameState() {
+		return gamestate;
 	}
 
-	public void setState(int state) {
-		this.state = state;
+	public static void setGameState(int s) {
+		gamestate = s;
+	}
+
+	public static boolean getPause() {
+		return gamestate == 3;
+	}
+
+	public static void setPause() {
+		gamestate = 3;
 	}
 
 	public static boolean getCollision() {
@@ -87,14 +98,6 @@ public class MazeRunner extends Frame implements GLEventListener {
 		collision = coll;
 	}
 
-	public static boolean getPause() {
-		return pause;
-	}
-
-	public static void setPause(boolean p) {
-		pause = p;
-	}
-
 	public MazeRunner() {
 		// Make a new window.
 		super("MazeRunner");
@@ -102,6 +105,8 @@ public class MazeRunner extends Frame implements GLEventListener {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		screenWidth = (int) screenSize.getWidth();
 		screenHeight = (int) screenSize.getHeight();
+
+		setUndecorated(true);
 
 		// Let's change the window to our liking.
 		setSize(screenWidth, screenHeight);
@@ -284,7 +289,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 		previousTime = currentTime;
 
 		// Update any movement since last frame.
-		if (!pause) {
+		if (gamestate == 2) {
 			updateMovement(deltaTime, collision);
 			updateCamera();
 		}

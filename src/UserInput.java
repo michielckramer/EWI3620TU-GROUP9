@@ -106,7 +106,13 @@ public class UserInput extends Control implements MouseListener,
 			MazeRunner.setCollision(!MazeRunner.getCollision());
 			break;
 		case KeyEvent.VK_ESCAPE:
-			MazeRunner.setPause(!MazeRunner.getPause());
+			if (MazeRunner.getGameState() == 2) {
+				MazeRunner.setPause();
+			} else {
+				if (MazeRunner.getGameState() == 3) {
+					MazeRunner.setGameState(2);
+				}
+			}
 			break;
 		}
 	}

@@ -18,12 +18,7 @@ public class Guard extends GameObject implements VisibleObject {
 		// Setting the guard colour and material
 		float guardColour[] = { 0.0f, 1.0f, 0.0f }; // Guard is green
 
-		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, guardColour, 0); // Set the
-																		// materials
-																		// used
-																		// by
-																		// the
-																		// guard
+		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, guardColour, 0);
 
 		gl.glPushMatrix();
 		gl.glTranslated(locationX, locationY, locationZ);
