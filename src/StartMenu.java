@@ -1,7 +1,9 @@
+import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.Panel;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,17 +20,17 @@ import com.sun.opengl.util.GLUT;
 import com.sun.opengl.util.j2d.TextRenderer;
 
 public class StartMenu implements ActionListener {
-	JFrame frame = new JFrame();
-	JPanel panel = new JPanel();
-	private JButton startButton = new JButton("Start Game");
-	private JButton exitButton = new JButton("Exit Game");
+	Frame frame = new Frame();
+	Panel panel = new Panel();
+	private Button startButton = new Button("Start Game");
+	private Button exitButton = new Button("Exit Game");
 	private JTextArea text = new JTextArea("Escape the prison! ");
 
 	public StartMenu() {
 		frame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
 		frame.setUndecorated(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 		frame.setVisible(true);
 
 		startButton.addActionListener(this);
@@ -53,7 +55,7 @@ public class StartMenu implements ActionListener {
 		
 		
 	
-		JPanel content = new JPanel();
+		Panel content = new Panel();
 		content.setLayout(null);
 		content.add(startButton);
 		content.add(exitButton);
