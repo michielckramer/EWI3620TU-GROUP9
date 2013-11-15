@@ -202,13 +202,37 @@ public class MazeRunner extends Frame implements GLEventListener {
 		visibleObjects = new ArrayList<VisibleObject>();
 		// Add the maze that we will be using.
 		maze = new Maze();
-
-		guard = new Guard(Maze.SQUARE_SIZE + Maze.SQUARE_SIZE / 2, // x-position
-				Maze.SQUARE_SIZE / 2, // y-position
-				Maze.SQUARE_SIZE + Maze.SQUARE_SIZE / 2); // z-position
 		visibleObjects.add(maze);
-		visibleObjects.add(guard);
+		
+		//Initialize/add the guard
+		Guard guard1 = new Guard(25,5,15);
+		
+		Point p1 = new Point(25,15);
+		Point p2 = new Point(45,15);
+		Point p3 = new Point(45,45);
+		Point p4 = new Point(35,45);
+		Point p5 = new Point(35,55);
+		Point p6 = new Point(15,55);
+		Point p7 = new Point(15,35);
+		Point p8 = new Point(25,35);
+		Point p9 = new Point(25,15);
 
+		ArrayList<Point> route = new ArrayList<Point>();
+		
+		route.add(p1);
+		route.add(p2);
+		route.add(p3);
+		route.add(p4);
+		route.add(p5);
+		route.add(p6);
+		route.add(p7);
+		route.add(p8);
+		route.add(p9);
+		
+		guard1.setRoute(route);
+		visibleObjects.add(guard1);
+
+		
 		// Initialize the player.
 		player = new Player(Maze.SQUARE_SIZE + Maze.SQUARE_SIZE / 2, // x-position
 				Maze.SQUARE_SIZE / 2, // y-position

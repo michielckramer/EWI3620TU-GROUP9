@@ -25,7 +25,7 @@ import com.sun.opengl.util.GLUT;
 public class Maze implements VisibleObject {
 
 	public final double MAZE_SIZE = 10;
-	public static final double SQUARE_SIZE = 5;
+	public static final double SQUARE_SIZE = 10;
 
 	private int[][] maze = { { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 			{ 1, 0, 1, 0, 0, 0, 0, 0, 0, 1 }, { 1, 0, 0, 0, 1, 0, 1, 1, 0, 1 },
@@ -34,6 +34,12 @@ public class Maze implements VisibleObject {
 			{ 1, 0, 1, 1, 1, 0, 1, 0, 0, 1 }, { 1, 0, 0, 0, 0, 0, 1, 1, 0, 2 },
 			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } };
 
+	
+	
+	public static double getSquare(){
+		return SQUARE_SIZE;
+	}
+	
 	/**
 	 * isWall(int x, int z) checks for a wall.
 	 * <p>
