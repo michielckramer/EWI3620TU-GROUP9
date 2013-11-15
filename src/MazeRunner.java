@@ -42,6 +42,8 @@ public class MazeRunner extends Frame implements GLEventListener {
 
 	private static boolean collision = true;
 
+	private static boolean pause = false;
+
 	private GLCanvas canvas;
 
 	private int screenWidth, screenHeight; // Screen size.
@@ -98,6 +100,15 @@ public class MazeRunner extends Frame implements GLEventListener {
 		collision = coll;
 	}
 
+	public static void resume() {
+		setGameState(2);
+		pause = false;
+	}
+
+	public static void exit() {
+		System.exit(0);
+	}
+
 	public MazeRunner() {
 		// Make a new window.
 		super("MazeRunner");
@@ -105,8 +116,6 @@ public class MazeRunner extends Frame implements GLEventListener {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		screenWidth = (int) screenSize.getWidth();
 		screenHeight = (int) screenSize.getHeight();
-
-		setUndecorated(true);
 
 		// Let's change the window to our liking.
 		setSize(screenWidth, screenHeight);
@@ -118,6 +127,10 @@ public class MazeRunner extends Frame implements GLEventListener {
 				System.exit(0);
 			}
 		});
+
+		GLCapabilities caps = new GLCapabilities();
+		caps.setDoubleBuffered(true);
+		caps.setHardwareAccelerated(true);
 
 		initJOGL(); // Initialize JOGL.
 		initObjects(); // Initialize all the objects!
@@ -237,11 +250,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 		// Now we set up our viewpoint.
 		gl.glMatrixMode(GL.GL_PROJECTION); // We'll use orthogonal projection.
 		gl.glLoadIdentity(); // Reset the current matrix.
-		glu.gluPerspective(60, screenWidth, screenHeight, 200); // Set up the
-																// parameters
-																// for
-																// perspective
-																// viewing.
+		glu.gluPerspective(60, screenWidth, screenHeight, 200);
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 
 		// Enable back-face culling.
@@ -280,36 +289,17 @@ public class MazeRunner extends Frame implements GLEventListener {
 	 */
 	public void display(GLAutoDrawable drawable) {
 		GL gl = drawable.getGL();
-		GLU glu = new GLU();
 
-		// Calculating time since last frame.
-		Calendar now = Calendar.getInstance();
-		long currentTime = now.getTimeInMillis();
-		int deltaTime = (int) (currentTime - previousTime);
-		previousTime = currentTime;
-
-		// Update any movement since last frame.
-		if (gamestate == 2) {
-			updateMovement(deltaTime, collision);
-			updateCamera();
+		switch (gamestate) {
+		case 1:
+			drawStart(gl);
+			break;
+		case 2:
+			drawGame(gl);
+			break;
+		case 3:
+			break;
 		}
-
-		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-		gl.glLoadIdentity();
-		glu.gluLookAt(camera.getLocationX(), camera.getLocationY(),
-				camera.getLocationZ(), camera.getVrpX(), camera.getVrpY(),
-				camera.getVrpZ(), camera.getVuvX(), camera.getVuvY(),
-				camera.getVuvZ());
-
-		// Display all the visible objects of MazeRunner.
-		for (Iterator<VisibleObject> it = visibleObjects.iterator(); it
-				.hasNext();) {
-			it.next().display(gl);
-		}
-
-		gl.glLoadIdentity();
-		// Flush the OpenGL buffer.
-		gl.glFlush();
 	}
 
 	/**
@@ -379,11 +369,10 @@ public class MazeRunner extends Frame implements GLEventListener {
 		}
 	}
 
-	/**
-	 * updateCamera() updates the camera position and orientation.
-	 * <p>
-	 * This is done by copying the locations from the Player, since MazeRunner
-	 * runs on a first person view.
+	/*
+	 * updateCamera() updates the camera position and orientation. <p> This is
+	 * done by copying the locations from the Player, since MazeRunner runs on a
+	 * first person view.
 	 */
 	private void updateCamera() {
 		camera.setLocationX(player.getLocationX());
@@ -392,5 +381,40 @@ public class MazeRunner extends Frame implements GLEventListener {
 		camera.setHorAngle(player.getHorAngle());
 		camera.setVerAngle(player.getVerAngle());
 		camera.calculateVRP();
+	}
+
+	public void drawGame(GL gl) {
+		// Calculating time since last frame.
+		GLU glu = new GLU();
+		Calendar now = Calendar.getInstance();
+		long currentTime = now.getTimeInMillis();
+		int deltaTime = (int) (currentTime - previousTime);
+		previousTime = currentTime;
+		updateMovement(deltaTime, collision);
+		updateCamera();
+
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+		glu.gluLookAt(camera.getLocationX(), camera.getLocationY(),
+				camera.getLocationZ(), camera.getVrpX(), camera.getVrpY(),
+				camera.getVrpZ(), camera.getVuvX(), camera.getVuvY(),
+				camera.getVuvZ());
+
+		// Display all the visible objects of MazeRunner.
+		for (Iterator<VisibleObject> it = visibleObjects.iterator(); it
+				.hasNext();) {
+			it.next().display(gl);
+		}
+
+		gl.glLoadIdentity();
+		// Flush the OpenGL buffer.
+		gl.glFlush();
+	}
+
+	public void drawPause(GL gl) {
+
+	}
+
+	public void drawStart(GL gl) {
+
 	}
 }

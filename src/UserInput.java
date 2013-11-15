@@ -66,13 +66,15 @@ public class UserInput extends Control implements MouseListener,
 
 	@Override
 	public void mouseDragged(MouseEvent event) {
-		dx = -event.getX() + x + sx;
-		dy = -event.getY() + y + sy;
-		if (dy > 90) {
-			dy = 90;
-		}
-		if (dy < -90) {
-			dy = -90;
+		if (MazeRunner.getGameState() == 2) {
+			dx = -event.getX() + x + sx;
+			dy = -event.getY() + y + sy;
+			if (dy > 90) {
+				dy = 89;
+			}
+			if (dy < -90) {
+				dy = -89;
+			}
 		}
 	}
 

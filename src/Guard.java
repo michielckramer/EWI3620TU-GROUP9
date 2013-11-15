@@ -22,7 +22,7 @@ public class Guard extends GameObject implements VisibleObject {
 
 		gl.glPushMatrix();
 		gl.glTranslated(locationX, locationY, locationZ);
-		glut.glutSolidCube((float) SQUARE_SIZE / 3);
+		glut.glutSolidCube((float) SQUARE_SIZE / 2);
 		gl.glPopMatrix();
 
 	}
