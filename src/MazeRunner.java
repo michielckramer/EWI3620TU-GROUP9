@@ -38,7 +38,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 	 * States: 1 = Startmenu, 2 = Running, 3 = Pause
 	 */
 
-	private static int gamestate = 2;
+	private static int gamestate;
 
 	private static boolean collision = true;
 
@@ -47,6 +47,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 	private GLCanvas canvas;
 
 	private int screenWidth, screenHeight; // Screen size.
+	private float buttonSize = screenHeight / 10.0f;
 	private ArrayList<VisibleObject> visibleObjects; // A list of objects that
 														// will be displayed on
 														// screen.
@@ -109,9 +110,11 @@ public class MazeRunner extends Frame implements GLEventListener {
 		System.exit(0);
 	}
 
-	public MazeRunner() {
+	public MazeRunner(int n) {
 		// Make a new window.
 		super("MazeRunner");
+
+		gamestate = n;
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		screenWidth = (int) screenSize.getWidth();
@@ -119,7 +122,6 @@ public class MazeRunner extends Frame implements GLEventListener {
 
 		// Let's change the window to our liking.
 		setSize(screenWidth, screenHeight);
-		setBackground(Color.white);
 
 		// The window also has to close when we want to.
 		this.addWindowListener(new WindowAdapter() {
@@ -128,16 +130,13 @@ public class MazeRunner extends Frame implements GLEventListener {
 			}
 		});
 
-		GLCapabilities caps = new GLCapabilities();
-		caps.setDoubleBuffered(true);
-		caps.setHardwareAccelerated(true);
-
 		initJOGL(); // Initialize JOGL.
 		initObjects(); // Initialize all the objects!
 
 		// Set the frame to visible. This automatically calls upon OpenGL to
 		// prevent a blank screen.
 		setVisible(true);
+		setBackground(Color.white);
 	}
 
 	/**
@@ -203,22 +202,22 @@ public class MazeRunner extends Frame implements GLEventListener {
 		// Add the maze that we will be using.
 		maze = new Maze();
 		visibleObjects.add(maze);
-		
-		//Initialize/add the guard
-		Guard guard1 = new Guard(25,5,15);
-		
-		Point p1 = new Point(25,15);
-		Point p2 = new Point(45,15);
-		Point p3 = new Point(45,45);
-		Point p4 = new Point(35,45);
-		Point p5 = new Point(35,55);
-		Point p6 = new Point(15,55);
-		Point p7 = new Point(15,35);
-		Point p8 = new Point(25,35);
-		Point p9 = new Point(25,15);
+
+		// Initialize/add the guard
+		Guard guard1 = new Guard(25, 5, 15);
+
+		Point p1 = new Point(25, 15);
+		Point p2 = new Point(45, 15);
+		Point p3 = new Point(45, 45);
+		Point p4 = new Point(35, 45);
+		Point p5 = new Point(35, 55);
+		Point p6 = new Point(15, 55);
+		Point p7 = new Point(15, 35);
+		Point p8 = new Point(25, 35);
+		Point p9 = new Point(25, 15);
 
 		ArrayList<Point> route = new ArrayList<Point>();
-		
+
 		route.add(p1);
 		route.add(p2);
 		route.add(p3);
@@ -228,11 +227,10 @@ public class MazeRunner extends Frame implements GLEventListener {
 		route.add(p7);
 		route.add(p8);
 		route.add(p9);
-		
+
 		guard1.setRoute(route);
 		visibleObjects.add(guard1);
 
-		
 		// Initialize the player.
 		player = new Player(Maze.SQUARE_SIZE + Maze.SQUARE_SIZE / 2, // x-position
 				Maze.SQUARE_SIZE / 2, // y-position
@@ -355,6 +353,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 		// Setting the new screen size and adjusting the viewport.
 		screenWidth = width;
 		screenHeight = height;
+		buttonSize = screenHeight / 10.0f;
 		gl.glViewport(0, 0, screenWidth, screenHeight);
 
 		// Set the new projection matrix.
@@ -439,6 +438,19 @@ public class MazeRunner extends Frame implements GLEventListener {
 	}
 
 	public void drawStart(GL gl) {
-
+		// GLU glu = new GLU();
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+		gl.glClearColor(1f, 1f, 1f, 0f);
+		gl.glLoadIdentity();
+		gl.glTranslatef(-1.5f, 0.0f, -6.0f);
+		gl.glBegin(GL.GL_TRIANGLES); // Drawing Using Triangles
+		gl.glColor3f(1.0f, 0.0f, 0.0f); // Red
+		gl.glVertex3f(0.0f, 1.0f, 0.0f); // Top Of Triangle (Front)
+		gl.glColor3f(0.0f, 1.0f, 0.0f); // Green
+		gl.glVertex3f(-1.0f, -1.0f, 0.0f); // Left Of Triangle (Front)
+		gl.glColor3f(0.0f, 0.0f, 0.0f); // Blue
+		gl.glVertex3f(1.0f, -1.0f, 0.0f); // Right Of Triangle (Front)
+		gl.glEnd(); // Finished Drawing The Triangle
+		gl.glFlush();
 	}
 }

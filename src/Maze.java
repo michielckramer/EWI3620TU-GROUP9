@@ -34,12 +34,10 @@ public class Maze implements VisibleObject {
 			{ 1, 0, 1, 1, 1, 0, 1, 0, 0, 1 }, { 1, 0, 0, 0, 0, 0, 1, 1, 0, 2 },
 			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } };
 
-	
-	
-	public static double getSquare(){
+	public static double getSquare() {
 		return SQUARE_SIZE;
 	}
-	
+
 	/**
 	 * isWall(int x, int z) checks for a wall.
 	 * <p>
@@ -104,22 +102,28 @@ public class Maze implements VisibleObject {
 		GLUT glut = new GLUT();
 
 		// Setting the wall colour and material.
-		float wallColour[] = { 0.5f, 0.0f, 0.7f, 1.0f }; // The walls are purple.
-		
-		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0); // Set the materials used by the wall.
+		float wallColour[] = { 0.5f, 0.0f, 0.7f, 1.0f }; // The walls are
+															// purple.
+
+		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0); // Set the
+																	// materials
+																	// used by
+																	// the wall.
 
 		// draw the grid with the current material
 		for (int i = 0; i < MAZE_SIZE; i++) {
 			for (int j = 0; j < MAZE_SIZE; j++) {
 				gl.glPushMatrix();
-				gl.glTranslated(i * SQUARE_SIZE + SQUARE_SIZE / 2, SQUARE_SIZE / 2, j * SQUARE_SIZE + SQUARE_SIZE / 2);
+				gl.glTranslated(i * SQUARE_SIZE + SQUARE_SIZE / 2,
+						SQUARE_SIZE / 2, j * SQUARE_SIZE + SQUARE_SIZE / 2);
 				if (isWall(i, j))
 					glut.glutSolidCube((float) SQUARE_SIZE);
 				gl.glPopMatrix();
 			}
 		}
 		paintSingleFloorTile(gl, MAZE_SIZE * SQUARE_SIZE); // Paint the floor.
-		paintSingleCeilingTile(gl, MAZE_SIZE * SQUARE_SIZE); // Paint the //== ceiling.
+		paintSingleCeilingTile(gl, MAZE_SIZE * SQUARE_SIZE); // Paint the //==
+																// ceiling.
 	}
 
 	/**
@@ -137,10 +141,10 @@ public class Maze implements VisibleObject {
 		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);
 		gl.glNormal3d(0, 1, 0);
 		gl.glBegin(GL.GL_QUADS);
-		gl.glVertex3d(0, 5, 0);
-		gl.glVertex3d(size, 5, 0);
-		gl.glVertex3d(size, 5, size);
-		gl.glVertex3d(0, 5, size);
+		gl.glVertex3d(0, SQUARE_SIZE, 0);
+		gl.glVertex3d(size, SQUARE_SIZE, 0);
+		gl.glVertex3d(size, SQUARE_SIZE, size);
+		gl.glVertex3d(0, SQUARE_SIZE, size);
 		gl.glEnd();
 	}
 

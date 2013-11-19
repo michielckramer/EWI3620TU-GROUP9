@@ -62,7 +62,7 @@ public class StartMenu implements ActionListener {
 	public void actionPerformed(ActionEvent event) {
 		Object src = event.getSource();
 		if (src == startButton) {
-			new MazeRunner();
+			new MazeRunner(1);
 			frame.dispose();
 		}
 		if (src == exitButton) {

@@ -1,5 +1,5 @@
 public class MainClass {
 	public static void main(String[] args) {
-		new MazeRunner();
+		new MazeRunner(2);
 	}
 }
