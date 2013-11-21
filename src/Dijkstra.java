@@ -15,7 +15,20 @@ public abstract class Dijkstra {
 		}
 	}
 
-	public static ArrayList<Point> path(Point s, Point t) {
+	public static ArrayList<Point> simplify(ArrayList<Point> points) {
+		if (points.size() > 0) {
+			for (int i = points.size() - 1; i > 0; i--) {
+				if (points.get(i) == points.get(i - 1)) {
+					points.remove(i);
+				}
+			}
+		}
+		return points;
+	}
+
+	public static ArrayList<Point> path(Point a, Point b) {
+		Point s = round(a);
+		Point t = round(b);
 		Vertex source = new Vertex(s);
 		Vertex target = new Vertex(t);
 		int size = (int) Maze.MAZE_SIZE;
@@ -33,10 +46,6 @@ public abstract class Dijkstra {
 		int index;
 
 		while (unvisited.size() > 0) {
-			/*
-			 * for (Vertex k : unvisited) { System.out.println(k.print()); }
-			 * System.out.println("-------------------");
-			 */
 			least = unvisited.get(0).getDistance() + 1;
 			index = 0;
 			for (int i = 0; i < unvisited.size(); i++) {
@@ -47,9 +56,6 @@ public abstract class Dijkstra {
 				}
 			}
 			Vertex u = unvisited.get(index);
-
-			// System.out.println(u.print());
-
 			if (u.equals(target)) {
 				target.setPrevious(u.getPrevious());
 				break;
@@ -83,5 +89,33 @@ public abstract class Dijkstra {
 		}
 
 		return route;
+	}
+
+	public static ArrayList<Point> path(ArrayList<Point> points) {
+		ArrayList<Point> route = new ArrayList<Point>();
+		if (points.size() >= 2) {
+			for (int i = 0; i < points.size() - 1; i++) {
+				route.addAll(path(points.get(i), points.get(i + 1)));
+			}
+		}
+		return route;
+	}
+
+	public static Point round(Point p) {
+		int x = (int) p.getX();
+		int xres = x % 10;
+		if (xres < 5) {
+			x += 5 - xres;
+		} else {
+			x -= xres - 5;
+		}
+		int y = (int) p.getY();
+		int yres = y % 10;
+		if (yres < 5) {
+			y += 5 - yres;
+		} else {
+			y -= yres - 5;
+		}
+		return new Point(x, y);
 	}
 }
