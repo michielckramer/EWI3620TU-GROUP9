@@ -17,7 +17,7 @@
  */
 public class Player extends GameObject {
 	private double horAngle, verAngle;
-	private double speed;
+	private static double speed;
 
 	private Control control = null;
 
@@ -124,6 +124,14 @@ public class Player extends GameObject {
 	 */
 	public void setSpeed(double speed) {
 		this.speed = speed;
+	}
+
+	public double getLocationX() {
+		return super.getLocationX();
+	}
+
+	public double getLocationZ() {
+		return super.getLocationZ();
 	}
 
 	/**

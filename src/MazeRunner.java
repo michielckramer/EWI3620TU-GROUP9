@@ -1,10 +1,19 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
+import javax.swing.ImageIcon;
 
 import com.sun.opengl.util.*;
+import com.sun.opengl.util.texture.Texture;
+import com.sun.opengl.util.texture.TextureData;
+import com.sun.opengl.util.texture.TextureIO;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,45 +36,43 @@ import java.util.Iterator;
  * 
  */
 public class MazeRunner extends Frame implements GLEventListener {
+	public static Texture muur1;
+
 	static final long serialVersionUID = 7526471155622776147L;
-
-	/*
-	 * **********************************************
-	 * * Local variables * **********************************************
-	 */
-
 	/*
 	 * States: 1 = Startmenu, 2 = Running, 3 = Pause
 	 */
 
-	private static int gamestate;
-
 	private static boolean collision = true;
-
-	private static boolean pause = false;
 
 	private GLCanvas canvas;
 
-	private int screenWidth, screenHeight; // Screen size.
+	private int screenWidth; // Screen size.
+
+	private int screenHeight;
 	private float buttonSize = screenHeight / 10.0f;
 	private ArrayList<VisibleObject> visibleObjects; // A list of objects that
 														// will be displayed on
 														// screen.
-	private Player player; // The player object.
+	private static Player player; // The player object.
 	private Guard guard; // The guard object
 	private Camera camera; // The camera object.
 	private UserInput input; // The user input object that controls the player.
 	private Maze maze; // The maze.
-	private long previousTime = Calendar.getInstance().getTimeInMillis(); // Used
-																			// to
-																			// calculate
-																			// elapsed
-																			// time.
+	private long previousTime = Calendar.getInstance().getTimeInMillis();
 
-	/*
-	 * **********************************************
-	 * * Initialization methods * **********************************************
-	 */
+	public static boolean getCollision() {
+		return collision;
+	}
+
+	public static void setCollision(boolean coll) {
+		collision = coll;
+	}
+
+	public static void exit() {
+		System.exit(0);
+	}
+
 	/**
 	 * Initializes the complete MazeRunner game.
 	 * <p>
@@ -76,45 +83,11 @@ public class MazeRunner extends Frame implements GLEventListener {
 	 * as the OpenGL event listener, to be able to function as the view
 	 * controller.
 	 */
-
-	public static int getGameState() {
-		return gamestate;
-	}
-
-	public static void setGameState(int s) {
-		gamestate = s;
-	}
-
-	public static boolean getPause() {
-		return gamestate == 3;
-	}
-
-	public static void setPause() {
-		gamestate = 3;
-	}
-
-	public static boolean getCollision() {
-		return collision;
-	}
-
-	public static void setCollision(boolean coll) {
-		collision = coll;
-	}
-
-	public static void resume() {
-		setGameState(2);
-		pause = false;
-	}
-
-	public static void exit() {
-		System.exit(0);
-	}
-
 	public MazeRunner(int n) {
 		// Make a new window.
 		super("MazeRunner");
 
-		gamestate = n;
+		StateManager.setGameState(n);
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		screenWidth = (int) screenSize.getWidth();
@@ -139,6 +112,14 @@ public class MazeRunner extends Frame implements GLEventListener {
 		setBackground(Color.white);
 	}
 
+	public static double getPlayerLocationX() {
+		return player.getLocationX();
+	}
+
+	public static double getPlayerLocationZ() {
+		return player.getLocationZ();
+	}
+
 	/**
 	 * initJOGL() sets up JOGL to work properly.
 	 * <p>
@@ -147,7 +128,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 	 * indicate to OpenGL that is has to enter a continuous loop, it uses an
 	 * Animator, which is part of the JOGL api.
 	 */
-	private void initJOGL() {
+	public void initJOGL() {
 		// First, we set up JOGL. We start with the default settings.
 		GLCapabilities caps = new GLCapabilities();
 		// Then we make sure that JOGL is hardware accelerated and uses double
@@ -203,34 +184,6 @@ public class MazeRunner extends Frame implements GLEventListener {
 		maze = new Maze();
 		visibleObjects.add(maze);
 
-		// Initialize/add the guard
-		Guard guard1 = new Guard(25, 5, 15);
-
-		Point p1 = new Point(25, 15);
-		Point p2 = new Point(45, 15);
-		Point p3 = new Point(45, 45);
-		Point p4 = new Point(35, 45);
-		Point p5 = new Point(35, 55);
-		Point p6 = new Point(15, 55);
-		Point p7 = new Point(15, 35);
-		Point p8 = new Point(25, 35);
-		Point p9 = new Point(25, 15);
-
-		ArrayList<Point> route = new ArrayList<Point>();
-
-		route.add(p1);
-		route.add(p2);
-		route.add(p3);
-		route.add(p4);
-		route.add(p5);
-		route.add(p6);
-		route.add(p7);
-		route.add(p8);
-		route.add(p9);
-
-		guard1.setRoute(route);
-		visibleObjects.add(guard1);
-
 		// Initialize the player.
 		player = new Player(Maze.SQUARE_SIZE + Maze.SQUARE_SIZE / 2, // x-position
 				Maze.SQUARE_SIZE / 2, // y-position
@@ -245,11 +198,6 @@ public class MazeRunner extends Frame implements GLEventListener {
 		player.setControl(input);
 	}
 
-	/*
-	 * **********************************************
-	 * * OpenGL event handlers * **********************************************
-	 */
-
 	/**
 	 * init(GLAutodrawable) is called to initialize the OpenGL context, giving
 	 * it the proper parameters for viewing.
@@ -260,10 +208,11 @@ public class MazeRunner extends Frame implements GLEventListener {
 	 * It is <b>very important</b> to realize that there should be no drawing at
 	 * all in this method.
 	 */
+
 	public void init(GLAutoDrawable drawable) {
 		drawable.setGL(new DebugGL(drawable.getGL())); // We set the OpenGL
-														// pipeline to Debugging
-														// mode.
+		// pipeline to Debugging
+		// mode.
 		GL gl = drawable.getGL();
 		GLU glu = new GLU();
 
@@ -284,13 +233,9 @@ public class MazeRunner extends Frame implements GLEventListener {
 
 		// Set and enable the lighting.
 		float lightPosition[] = { 0.0f, 50.0f, 0.0f, 1.0f }; // High up in the
-																// sky!
+		// sky!
 		float lightColour[] = { 1.0f, 1.0f, 1.0f, 0.0f }; // White light!
-		gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, lightPosition, 0); // Note
-																		// that
-																		// we're
-																		// setting
-																		// Light0.
+		gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, lightPosition, 0);
 		gl.glLightfv(GL.GL_LIGHT0, GL.GL_AMBIENT, lightColour, 0);
 		gl.glEnable(GL.GL_LIGHTING);
 		gl.glEnable(GL.GL_LIGHT0);
@@ -311,16 +256,10 @@ public class MazeRunner extends Frame implements GLEventListener {
 	 */
 	public void display(GLAutoDrawable drawable) {
 		GL gl = drawable.getGL();
-
-		switch (gamestate) {
-		case 1:
-			drawStart(gl);
-			break;
-		case 2:
+		if (StateManager.getGameState() == 2) {
 			drawGame(gl);
-			break;
-		case 3:
-			break;
+		} else {
+			StateManager.display(drawable);
 		}
 	}
 
@@ -351,6 +290,8 @@ public class MazeRunner extends Frame implements GLEventListener {
 		GLU glu = new GLU();
 
 		// Setting the new screen size and adjusting the viewport.
+		StateManager.setScreenWidth(width);
+		StateManager.setScreenHeight(height);
 		screenWidth = width;
 		screenHeight = height;
 		buttonSize = screenHeight / 10.0f;
@@ -363,11 +304,6 @@ public class MazeRunner extends Frame implements GLEventListener {
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 	}
 
-	/*
-	 * **********************************************
-	 * * Methods * **********************************************
-	 */
-
 	/**
 	 * updateMovement(int) updates the position of all objects that need moving.
 	 * This includes rudimentary collision checking and collision reaction.
@@ -376,13 +312,13 @@ public class MazeRunner extends Frame implements GLEventListener {
 		double lx = player.getLocationX();
 		double lz = player.getLocationZ();
 		player.update(deltaTime);
-		if (maze.isWall(player.getLocationX() - 0.2,
+		if (Maze.isWall(player.getLocationX() - 0.2,
 				player.getLocationZ() - 0.2)
-				|| maze.isWall(player.getLocationX() + 0.2,
+				|| Maze.isWall(player.getLocationX() + 0.2,
 						player.getLocationZ() - 0.2)
-				|| maze.isWall(player.getLocationX() - 0.2,
+				|| Maze.isWall(player.getLocationX() - 0.2,
 						player.getLocationZ() + 0.2)
-				|| maze.isWall(player.getLocationX() + 0.2,
+				|| Maze.isWall(player.getLocationX() + 0.2,
 						player.getLocationZ() + 0.2)) {
 			if (collision && player.getLocationY() >= 0
 					&& player.getLocationY() <= Maze.SQUARE_SIZE) {
@@ -407,6 +343,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 	}
 
 	public void drawGame(GL gl) {
+		gl.glEnable(GL.GL_LIGHTING);
 		// Calculating time since last frame.
 		GLU glu = new GLU();
 		Calendar now = Calendar.getInstance();
@@ -433,24 +370,27 @@ public class MazeRunner extends Frame implements GLEventListener {
 		gl.glFlush();
 	}
 
-	public void drawPause(GL gl) {
+	/*
+	 * public void drawStart(GL gl) { // GLU glu = new GLU();
+	 * gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+	 * gl.glClearColor(1f, 1f, 1f, 0f); gl.glLoadIdentity();
+	 * gl.glTranslatef(0.0f, 0.0f, -0.5f); gl.glBegin(GL.GL_QUADS);
+	 * gl.glColor3f(1.0f, 0.0f, 0.0f); gl.glVertex3f(0.0f, 0.0f, 0.0f);
+	 * gl.glVertex3f(1.0f, 0.0f, 0.0f); gl.glVertex3f(1.0f, 1.0f, 0.0f);
+	 * gl.glVertex3f(0.0f, 1.0f, 0.0f); gl.glEnd(); gl.glFlush(); }
+	 */
 
-	}
-
-	public void drawStart(GL gl) {
-		// GLU glu = new GLU();
-		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-		gl.glClearColor(1f, 1f, 1f, 0f);
-		gl.glLoadIdentity();
-		gl.glTranslatef(-1.5f, 0.0f, -6.0f);
-		gl.glBegin(GL.GL_TRIANGLES); // Drawing Using Triangles
-		gl.glColor3f(1.0f, 0.0f, 0.0f); // Red
-		gl.glVertex3f(0.0f, 1.0f, 0.0f); // Top Of Triangle (Front)
-		gl.glColor3f(0.0f, 1.0f, 0.0f); // Green
-		gl.glVertex3f(-1.0f, -1.0f, 0.0f); // Left Of Triangle (Front)
-		gl.glColor3f(0.0f, 0.0f, 0.0f); // Blue
-		gl.glVertex3f(1.0f, -1.0f, 0.0f); // Right Of Triangle (Front)
-		gl.glEnd(); // Finished Drawing The Triangle
-		gl.glFlush();
+	public static Texture loadTexture(String a) {
+		try {
+			File f = new File(a);
+			TextureData data = TextureIO.newTextureData(f, false, "jpg");
+			muur1 = TextureIO.newTexture(data);
+			// muur1.getHeight();
+		} catch (FileNotFoundException e) {
+			System.err.println("FileNotFoundException: " + e.getMessage());
+		} catch (IOException e) {
+			System.err.println("Caught IOException: " + e.getMessage());
+		}
+		return muur1;
 	}
 }

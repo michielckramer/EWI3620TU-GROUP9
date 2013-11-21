@@ -7,13 +7,15 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.media.opengl.GL;
+
 public class PauseMenu implements ActionListener {
 
 	private Frame frame = new Frame();
 	private Button resumeButton = new Button("Resume Game");
 	private Button exitButton = new Button("Exit Game");
 
-	public PauseMenu() {
+	public void display(GL gl) {
 		frame.setAlwaysOnTop(true);
 		frame.toFront();
 		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
@@ -44,7 +46,7 @@ public class PauseMenu implements ActionListener {
 	public void actionPerformed(ActionEvent event) {
 		Object src = event.getSource();
 		if (src == resumeButton) {
-			MazeRunner.resume();
+			StateManager.resume();
 			frame.dispose();
 		}
 		if (src == exitButton) {

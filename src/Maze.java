@@ -1,5 +1,7 @@
 import javax.media.opengl.GL;
+
 import com.sun.opengl.util.GLUT;
+import com.sun.opengl.util.texture.Texture;
 
 /**
  * Maze represents the maze used by MazeRunner.
@@ -24,14 +26,15 @@ import com.sun.opengl.util.GLUT;
  */
 public class Maze implements VisibleObject {
 
-	public final double MAZE_SIZE = 10;
+	public static final double MAZE_SIZE = 10;
 	public static final double SQUARE_SIZE = 10;
+	private static Texture texture;
 
-	private int[][] maze = { { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+	public static int[][] maze = { { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 			{ 1, 0, 1, 0, 0, 0, 0, 0, 0, 1 }, { 1, 0, 0, 0, 1, 0, 1, 1, 0, 1 },
 			{ 1, 0, 1, 1, 0, 0, 1, 0, 0, 1 }, { 1, 0, 0, 0, 0, 1, 1, 0, 1, 1 },
 			{ 1, 1, 1, 0, 1, 0, 1, 0, 0, 1 }, { 1, 0, 0, 0, 1, 0, 1, 0, 1, 1 },
-			{ 1, 0, 1, 1, 1, 0, 1, 0, 0, 1 }, { 1, 0, 0, 0, 0, 0, 1, 1, 0, 2 },
+			{ 1, 0, 1, 1, 1, 0, 0, 0, 0, 1 }, { 1, 0, 0, 0, 0, 0, 1, 1, 0, 1 },
 			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } };
 
 	public static double getSquare() {
@@ -49,7 +52,7 @@ public class Maze implements VisibleObject {
 	 *            the z-coordinate of the location to check
 	 * @return whether there is a wall at maze[x][z]
 	 */
-	public boolean isWall(int x, int z) {
+	public static boolean isWall(int x, int z) {
 		if (x >= 0 && x < MAZE_SIZE && z >= 0 && z < MAZE_SIZE)
 			return maze[x][z] == 1;
 		else
@@ -70,7 +73,7 @@ public class Maze implements VisibleObject {
 	 *            the z-coordinate of the location to check
 	 * @return whether there is a wall at maze[x][z]
 	 */
-	public boolean isWall(double x, double z) {
+	public static boolean isWall(double x, double z) {
 		int gX = convertToGridX(x);
 		int gZ = convertToGridZ(z);
 		return isWall(gX, gZ);
@@ -83,7 +86,7 @@ public class Maze implements VisibleObject {
 	 *            the double x-coordinate
 	 * @return the integer x-coordinate
 	 */
-	private int convertToGridX(double x) {
+	private static int convertToGridX(double x) {
 		return (int) Math.floor(x / SQUARE_SIZE);
 	}
 
@@ -94,7 +97,7 @@ public class Maze implements VisibleObject {
 	 *            the double z-coordinate
 	 * @return the integer z-coordinate
 	 */
-	private int convertToGridZ(double z) {
+	private static int convertToGridZ(double z) {
 		return (int) Math.floor(z / SQUARE_SIZE);
 	}
 
@@ -149,14 +152,27 @@ public class Maze implements VisibleObject {
 	}
 
 	private void paintSingleFloorTile(GL gl, double size) {
-		float wallColour[] = { 0.0f, 0.0f, 1.0f, 1.0f };
+		float wallColour[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);
+		gl.glEnable(GL.GL_TEXTURE_2D);
+
+		if (texture == null) {
+			texture = MazeRunner
+					.loadTexture("C://Users/Michiel/Documents/GitHub/EWI3620TU-GROUP9/Textures/muur2.jpg");
+		}
+		texture.bind();
+
 		gl.glNormal3d(0, 1, 0);
 		gl.glBegin(GL.GL_QUADS);
 		gl.glVertex3d(0, 0, 0);
+		gl.glTexCoord2f(0.0f, 0.0f);
 		gl.glVertex3d(0, 0, size);
+		gl.glTexCoord2f(1.0f, 0.0f);
 		gl.glVertex3d(size, 0, size);
+		gl.glTexCoord2f(1.0f, 1.0f);
 		gl.glVertex3d(size, 0, 0);
+		gl.glTexCoord2f(0.0f, 1.0f);
 		gl.glEnd();
+
 	}
 }

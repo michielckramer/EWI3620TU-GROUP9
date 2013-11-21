@@ -66,14 +66,16 @@ public class UserInput extends Control implements MouseListener,
 
 	@Override
 	public void mouseDragged(MouseEvent event) {
-		if (MazeRunner.getGameState() == 2) {
+		if (StateManager.getGameState() == 2) {
 			dx = -event.getX() + x + sx;
-			dy = -event.getY() + y + sy;
-			if (dy > 90) {
+			if (-event.getY() + y + sy > 90) {
 				dy = 89;
-			}
-			if (dy < -90) {
-				dy = -89;
+			} else {
+				if (-event.getY() + y + sy < -90) {
+					dy = -89;
+				} else {
+					dy = -event.getY() + y + sy;
+				}
 			}
 		}
 	}
@@ -108,14 +110,15 @@ public class UserInput extends Control implements MouseListener,
 			MazeRunner.setCollision(!MazeRunner.getCollision());
 			break;
 		case KeyEvent.VK_ESCAPE:
-			if (MazeRunner.getGameState() == 2) {
-				MazeRunner.setPause();
+			if (StateManager.getGameState() == 2) {
+				StateManager.setGameState(1);
 			} else {
-				if (MazeRunner.getGameState() == 3) {
-					MazeRunner.setGameState(2);
+				if (StateManager.getGameState() == 1) {
+					StateManager.setGameState(2);
 				}
 			}
 			break;
+
 		}
 	}
 
