@@ -17,7 +17,7 @@
  */
 public class Player extends GameObject {
 	private double horAngle, verAngle;
-	private static double speed;
+	private double speed;
 
 	private Control control = null;
 

@@ -1,23 +1,29 @@
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
-import javax.media.opengl.*;
-import javax.media.opengl.glu.*;
-import javax.swing.ImageIcon;
-
-import com.sun.opengl.util.*;
-import com.sun.opengl.util.texture.Texture;
-import com.sun.opengl.util.texture.TextureData;
-import com.sun.opengl.util.texture.TextureIO;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
+
+import javax.media.opengl.DebugGL;
+import javax.media.opengl.GL;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLCanvas;
+import javax.media.opengl.GLCapabilities;
+import javax.media.opengl.GLEventListener;
+import javax.media.opengl.glu.GLU;
+
+import com.sun.opengl.util.Animator;
+import com.sun.opengl.util.texture.Texture;
+import com.sun.opengl.util.texture.TextureData;
+import com.sun.opengl.util.texture.TextureIO;
 
 /**
  * MazeRunner is the base class of the game, functioning as the view controller
@@ -51,9 +57,10 @@ public class MazeRunner extends Frame implements GLEventListener {
 
 	private int screenHeight;
 	private float buttonSize = screenHeight / 10.0f;
-	private ArrayList<VisibleObject> visibleObjects; // A list of objects that
-														// will be displayed on
-														// screen.
+	private static ArrayList<VisibleObject> visibleObjects; // A list of objects
+															// that
+	// will be displayed on
+	// screen.
 	private static Player player; // The player object.
 	private Guard guard; // The guard object
 	private Camera camera; // The camera object.
@@ -67,6 +74,22 @@ public class MazeRunner extends Frame implements GLEventListener {
 
 	public static void setCollision(boolean coll) {
 		collision = coll;
+	}
+
+	public static ArrayList<VisibleObject> getObjects() {
+		return visibleObjects;
+	}
+
+	public static void setObjects(ArrayList<VisibleObject> a) {
+		visibleObjects = a;
+	}
+
+	public static Player getPlayer() {
+		return player;
+	}
+
+	public static void setPlayer(Player player) {
+		MazeRunner.player = player;
 	}
 
 	public static void exit() {
@@ -183,6 +206,33 @@ public class MazeRunner extends Frame implements GLEventListener {
 		// Add the maze that we will be using.
 		maze = new Maze();
 		visibleObjects.add(maze);
+
+		// Item
+		Items item1 = new Items(55, 2, 55, 1);
+		visibleObjects.add(item1);
+
+		Items item2 = new Items(70, 2, 55, 1);
+		visibleObjects.add(item2);
+
+		// Items item3 = new Items(90, 2, 55);
+		// visibleObjects.add(item3);
+
+		// Initialize/add the guard
+		// Guard guard1 = new Guard(85, 5, 85);
+		// visibleObjects.add(guard1);
+		Point p1 = new Point(15, 15);
+		Point p2 = new Point(15, 86);
+		Point p3 = new Point(85, 85);
+		Point p4 = new Point(85, 15);
+		ArrayList<Point> route = new ArrayList<Point>();
+		route.add(p3);
+		route.add(p4);
+		route.add(p1);
+		route.add(p2);
+		route.add(p3);
+		route = Dijkstra.path(route);
+		// guard1.setRoute(route);
+		// guard1.setString("1");
 
 		// Initialize the player.
 		player = new Player(Maze.SQUARE_SIZE + Maze.SQUARE_SIZE / 2, // x-position
